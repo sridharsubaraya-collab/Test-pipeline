@@ -81,16 +81,16 @@ Replace `<ACCOUNT_ID>`, `<OWNER>`, `<REPO>` below:
                 "s3:ListBucket"
             ],
             "Resource": [
-                "arn:aws:s3:::my-secure-tf-state-235423434",
-                "arn:aws:s3:::my-secure-tf-state-235423434/*"
+                "arn:aws:s3:::my-secure-tf-state-23542343411",
+                "arn:aws:s3:::my-secure-tf-state-23542343411/*"
             ]
         },
         {
             "Effect": "Allow",
             "Action": "s3:*",
             "Resource": [
-                "arn:aws:s3:::amr-terraform-test-bucket-3412432535",
-                "arn:aws:s3:::amr-terraform-test-bucket-3412432535/*"
+                "arn:aws:s3:::amr-terraform-test-bucket-341243253511",
+                "arn:aws:s3:::amr-terraform-test-bucket-341243253511/*"
             ]
         }
     ]
