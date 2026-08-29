@@ -5,17 +5,12 @@ on:
     branches:
       - main
 
-
 jobs:
   terraform:
-    name: Terraform
     runs-on: ubuntu-latest
-
     permissions:
-      id-token: write
+      id-token: write   # Required for OIDC
       contents: read
-      
-
 
     steps:
       - name: Checkout code
@@ -26,29 +21,3 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::537557168820:role/Test-Role
           aws-region: ap-south-1
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.8.0
-
-      - name: Terraform Init
-        run: terraform init
-
-      - name: Terraform Format check
-        run: terraform fmt
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        id: plan
-        run: |
-          set -o pipefail
-          terraform plan -no-color -detailed-exitcode | tee tfplan.txt
-          echo "exitcode=$?" >> $GITHUB_OUTPUT
-        continue-on-error: true
-
-      
-      - name: Terraform Apply
-        run: terraform apply -auto-approve
