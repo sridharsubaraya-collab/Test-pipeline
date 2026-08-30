@@ -7,9 +7,11 @@ on:
 
 jobs:
   terraform:
+    name: Terraform
     runs-on: ubuntu-latest
+
     permissions:
-      id-token: write   # Required for OIDC
+      id-token: write   # Required for OIDC federation
       contents: read
 
     steps:
@@ -21,3 +23,37 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::537557168820:role/Test-Role
           aws-region: ap-south-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.8.0
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Format check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: |
+          set -o pipefail
+          terraform plan -no-color -detailed-exitcode | tee tfplan.txt
+          echo "exitcode=$?" >> $GITHUB_OUTPUT
+        continue-on-error: true
+
+      - name: Terraform Apply
+        if: steps.plan.outputs.exitcode == '2'
+        run: terraform apply -auto-approve
+
+      # Optional: Debug OIDC token to verify claims
+      - name: Debug OIDC token
+        run: |
+          curl -sSL "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
+            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            | jq -r '.value' > token.jwt
+          cat token.jwt | cut -d '.' -f2 | base64 --decode | jq
