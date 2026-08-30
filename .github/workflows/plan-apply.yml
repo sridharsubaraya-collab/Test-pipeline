@@ -49,11 +49,3 @@ jobs:
       - name: Terraform Apply
         if: steps.plan.outputs.exitcode == '2'
         run: terraform apply -auto-approve
-
-      # Optional: Debug OIDC token to verify claims
-      - name: Debug OIDC token
-        run: |
-          curl -sSL "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=sts.amazonaws.com" \
-            -H "Authorization: Bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-            | jq -r '.value' > token.jwt
-          cat token.jwt | cut -d '.' -f2 | base64 --decode | jq
