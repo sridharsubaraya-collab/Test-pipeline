@@ -37,7 +37,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/Test-Role
+          role-to-assume: arn:aws:iam::537557168820:role/Test-Role
           aws-region: ap-south-1
 
       - name: Setup Terraform
